@@ -17,9 +17,11 @@ export const GlobalStoreActionType = {
     CREATE_NEW_LIST: "CREATE_NEW_LIST",
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
+    
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
-    DELETE_MARKED_LIST: "DELETE_MARKED_LIST"
+    DELETE_MARKED_LIST: "DELETE_MARKED_LIST",
+    UPDATE_MARKED_LIST: "UPDATE_MARKED_LIST"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -102,6 +104,14 @@ export const useGlobalStore = () => {
                     listMarkedForDeletion: store.listMarkedForDeletion
                 });
             }
+            /*
+            case GlobalStoreActionType.SET_LIST_EDIT_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    
+                })
+            }*/
             // START EDITING A LIST NAME
             case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
                 return setStore({
@@ -119,6 +129,15 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listMarkedForDeletion: null
+                });
+            }
+            case GlobalStoreActionType.UPDATE_MARKED_LIST: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    listMarkedForDeletion: store.listMarkedForDeletion
                 });
             }
             default:
@@ -245,6 +264,25 @@ export const useGlobalStore = () => {
         });
     }
 
+
+    store.addSong = function(index, song) {
+        store.currentList.songs.splice(index, 0, song);
+        store.updateList();
+    }
+
+    store.updateList = function() {
+        async function updateList() {
+            let response = await api.updatePlaylistById(store.currentList._id, store.currentList)
+            if(response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.UPDATE_MARKED_LIST,
+                    payload: response.data.playlist
+                })
+            }
+        }
+        updateList();
+    }
+
     // THIS FUNCTION ENABLES THE PROCESS OF DELETING A LIST
     store.markListForDeletion = function (id) {
         storeReducer({
@@ -253,6 +291,12 @@ export const useGlobalStore = () => {
         });
         console.log("list marked for deletion" + id);
         store.openDeleteListModal();
+    }
+
+    store.markListForEdit = function (id) {
+        storeReducer({
+            type: GlobalStoreActionType.M
+        })
     }
 
     store.deleteList = function(id) {
@@ -284,6 +328,7 @@ export const useGlobalStore = () => {
         let modal = document.getElementById("delete-list-modal");
         modal.classList.remove("is-visible");
     }
+
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };

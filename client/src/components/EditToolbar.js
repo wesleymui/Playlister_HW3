@@ -13,6 +13,16 @@ function EditToolbar() {
 
     let enabledButtonClass = "playlister-button";
 
+    function handleAddSong() {
+        console.log("add song button clicked");
+        let index = store.getPlaylistSize();
+        let song = {
+            "title": "Untitled",
+            "artist": "Unknown",
+            "youTubeId": "dQw4w9WgXcQ"
+        };
+        store.addSong(index, song);
+    }
     function handleUndo() {
         store.undo();
     }
@@ -35,6 +45,7 @@ function EditToolbar() {
                 disabled={editStatus}
                 value="+"
                 className={enabledButtonClass}
+                onClick={handleAddSong}
             />
             <input
                 type="button"
