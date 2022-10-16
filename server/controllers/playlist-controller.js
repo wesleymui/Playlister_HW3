@@ -99,10 +99,47 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+updatePlaylistById = async (req, res) => {
+    const body = req.body;
+    console.log("updatePlaylist body:" + body);
+    
+    if(!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body',
+        })
+    }
+
+    Playlist.findOne({ _id: req.params.id }, (err, playlist) => {
+        if(err) {
+            return res.status(400).json({success: false, error: err});
+        }
+        playlist.name = body.name;
+        playlist.songs = body.songs;
+        
+        playlist
+            .save()
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    playlist: playlist,
+                    message: 'Playlist Updated!',
+                })
+            })
+            .catch(error => {
+                return res.status(400).json({
+                    error,
+                    message: 'Playlist Not Updated!'
+                })
+            })
+    }).catch(err => console.log(err))
+}
+
 module.exports = {
     createPlaylist,
     deletePlaylistById,
     getPlaylists,
     getPlaylistPairs,
-    getPlaylistById
+    getPlaylistById,
+    updatePlaylistById
 }
