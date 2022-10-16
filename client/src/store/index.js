@@ -283,6 +283,25 @@ export const useGlobalStore = () => {
         updateList();
     }
 
+    store.moveSong = function(start, end) {
+        if (start < end) {
+            let temp = store.currentList.songs[start];
+            console.log(temp);
+            for (let i = start; i < end; i++) {
+                store.currentList.songs[i] = store.currentList.songs[i + 1];
+            }
+            store.currentList.songs[end] = temp;
+        }
+        else if (start > end) {
+            let temp = store.currentList.songs[start];
+            for (let i = start; i > end; i--) {
+                store.currentList.songs[i] = store.currentList.songs[i - 1];
+            }
+            store.currentList.songs[end] = temp;
+        }
+        store.updateList();
+    }
+
     // THIS FUNCTION ENABLES THE PROCESS OF DELETING A LIST
     store.markListForDeletion = function (id) {
         storeReducer({
