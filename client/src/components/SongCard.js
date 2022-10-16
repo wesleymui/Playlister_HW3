@@ -49,6 +49,17 @@ function SongCard(props) {
         store.moveSong(sourceId, targetId);
     }
 
+    function handleEditSong(event) {
+        event.stopPropagation();
+        let title = document.getElementById("title");
+        let artist = document.getElementById("artist");
+        let youtubeid = document.getElementById("youtubeid");
+        title.value = song.title;
+        artist.value = song.artist;
+        youtubeid.value = song.youTubeId;
+        store.markSongForEdit(index);
+    }
+
     const { song, index } = props;
     let cardClass = "list-card unselected-list-card";
     return (
@@ -61,6 +72,7 @@ function SongCard(props) {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onDoubleClick={handleEditSong}
             draggable="true"
         >
             {index + 1}.
