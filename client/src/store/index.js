@@ -494,7 +494,8 @@ export const useGlobalStore = () => {
             newListCounter: store.newListCounter,
             songIndexMarked: store.songIndexMarked,
             editListNameActive: store.editListNameActive,
-            editPlaylistActive: false,
+            editPlaylistActive: true,
+            modalActive: false,
             listMarkedForDeletion: store.listMarkedForDeletion,
             tps: tps
         });
