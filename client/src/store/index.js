@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+import AddSong_Transaction from '../transactions/AddSong_Transaction';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -128,7 +129,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    songIndexMarked: false,
+                    songIndexMarked: null,
                     editListNameActive: true,
                     listMarkedForDeletion: store.listMarkedForDeletion
                 });
@@ -138,7 +139,7 @@ export const useGlobalStore = () => {
                     idNamePairs: payload,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    songIndexMarked: false,
+                    songIndexMarked: null,
                     editListNameActive: false,
                     listMarkedForDeletion: null
                 });
@@ -148,7 +149,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
-                    songIndexMarked: false,
+                    songIndexMarked: null,
                     editListNameActive: false,
                     listMarkedForDeletion: store.listMarkedForDeletion
                 });
@@ -280,6 +281,11 @@ export const useGlobalStore = () => {
     store.addSong = function(index, song) {
         store.currentList.songs.splice(index, 0, song);
         store.updateList();
+    }
+
+    store.addSongTransaction = function(index) {
+        let transaction = new AddSong_Transaction(store, index);
+        tps.addTransaction(transaction);
     }
 
     store.editSong = function(index, song) {
