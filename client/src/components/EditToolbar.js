@@ -30,9 +30,21 @@ function EditToolbar() {
         store.closeCurrentList();
     }
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    let undoStatus = false;
+    let redoStatus = false;
+    if (store.editListNameActive || store.modalActive || !store.editPlaylistActive) {
         editStatus = true;
+        undoStatus = true;
+        redoStatus = true;
     }
+    else if (store.editPlaylistActive) {
+        editStatus = false;
+        undoStatus = !store.tps.hasTransactionToUndo();
+        redoStatus = !store.tps.hasTransactionToRedo();
+    } 
+
+
+
     return (
         <span id="edit-toolbar">
             <input
@@ -46,7 +58,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='undo-button'
-                disabled={editStatus}
+                disabled={undoStatus}
                 value="⟲"
                 className={enabledButtonClass}
                 onClick={handleUndo}
@@ -54,7 +66,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='redo-button'
-                disabled={editStatus}
+                disabled={redoStatus}
                 value="⟳"
                 className={enabledButtonClass}
                 onClick={handleRedo}
