@@ -40,7 +40,7 @@ function ListCard(props) {
     function toggleEdit() {
         let newActive = !editActive;
         if (newActive) {
-            store.setlistNameActive();
+            store.seteditListNameActive();
         }
         setEditActive(newActive);
     }
