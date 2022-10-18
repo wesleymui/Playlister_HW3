@@ -1,9 +1,19 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { GlobalStoreContext } from "../store";
 
 function DeleteSongModal() {
     const {store} = useContext(GlobalStoreContext);
+    const [song, setSong] = useState({});
+
+    useEffect(() => {
+        if(store.currentList != null && store.songIndexMarked >= 0) {
+            let song = store.currentList.songs[store.songIndexMarked];
+            console.log("current list: " + store.currentList);
+            console.log("song index: " + store.songIndexMarked);
+            if(song) { setSong(song); }
+        }
+    });
     store.history = useHistory();
 
     function handleDeleteSong(event) {
@@ -13,16 +23,6 @@ function DeleteSongModal() {
 
     function closeRemoveSongModal() {
         store.closeDeleteSongModal();
-    }
-
-    let title = "";
-    let artist = "";
-    if(store.currentList) {
-        let song = store.currentList[store.songIndexMarked];
-        if(song) {
-            title = song.title;
-            artist = song.artist;
-        }
     }
     
     return (
@@ -36,7 +36,7 @@ function DeleteSongModal() {
                     </div>                
                     <div class="modal-center">
                         <div class="modal-center-content">
-                            Are you sure you wish to remove <span id="remove-song-span">{title} by {artist}</span> from the playlist?
+                            Are you sure you wish to remove <span id="remove-song-span">{song.title} by {song.artist}</span> from the playlist?
                         </div>
                     </div>
                     <div class="modal-south">
