@@ -46,7 +46,7 @@ function SongCard(props) {
         console.log("targetid: " + targetId);
         console.log("sourceId" + sourceId);
 
-        store.moveSong(sourceId, targetId);
+        store.addMoveSongTransaction(sourceId, targetId);
     }
 
     function handleEditSong(event) {
