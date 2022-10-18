@@ -55,6 +55,10 @@ body {
   border-radius: 10px;
 }
 
+#banner-text {
+  padding-left: 10pt;
+}
+
 #edit-toolbar {
   grid-column: 2 / 3;
   grid-row: 1 / 2;
@@ -69,6 +73,11 @@ body {
   display:grid;
   background-color: var(--swatch-primary);
 }
+#selector-text {
+  font-size: 32pt;
+  padding-top: 10pt;
+}
+
 
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;
@@ -77,6 +86,11 @@ body {
   color: black;
   cursor: pointer;
   opacity: 100%;
+}
+
+#add-song-button, #close-button {
+  padding-top: 7pt;
+  padding-bottom: 6.67pt;
 }
 
 .playlister-button:hover {
@@ -150,6 +164,10 @@ input {
 
 .disabled:hover {
   color: var(--swatch-neutral);
+}
+
+#remove-song-span {
+  font-weight: bold;
 }
 
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */

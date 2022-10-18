@@ -9,7 +9,7 @@ import EditToolbar from "./EditToolbar";
 function Banner(props) {
     return (        
         <div id="playlister-banner">
-            Playlister
+            <text id="banner-text">Playlister</text>
             <EditToolbar />
         </div>
     );
