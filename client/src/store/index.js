@@ -3,6 +3,8 @@ import jsTPS from '../common/jsTPS'
 import api from '../api'
 import AddSong_Transaction from '../transactions/AddSong_Transaction';
 import EditSong_Transaction from '../transactions/EditSong_Transaction';
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction';
+import RemoveSong_Transaction from '../transactions/RemoveSong_Transaction';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -279,6 +281,19 @@ export const useGlobalStore = () => {
         });
     }
 
+    store.updateList = function() {
+        async function updateList() {
+            let response = await api.updatePlaylistById(store.currentList._id, store.currentList)
+            if(response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.UPDATE_MARKED_LIST,
+                    payload: response.data.playlist
+                })
+            }
+        }
+        updateList();
+    }
+
     store.addSong = function(index, song) {
         store.currentList.songs.splice(index, 0, song);
         store.updateList();
@@ -304,17 +319,9 @@ export const useGlobalStore = () => {
         store.updateList();
     }
 
-    store.updateList = function() {
-        async function updateList() {
-            let response = await api.updatePlaylistById(store.currentList._id, store.currentList)
-            if(response.data.success) {
-                storeReducer({
-                    type: GlobalStoreActionType.UPDATE_MARKED_LIST,
-                    payload: response.data.playlist
-                })
-            }
-        }
-        updateList();
+    store.addRemoveSongTransaction = function(index) {
+        let transaction = new RemoveSong_Transaction(store, index, store.currentList.songs[index]);
+        tps.addTransaction(transaction);
     }
 
     store.moveSong = function(start, end) {
@@ -334,6 +341,11 @@ export const useGlobalStore = () => {
             store.currentList.songs[end] = temp;
         }
         store.updateList();
+    }
+
+    store.addMoveSongTransaction = function(start, end) {
+        let transaction = new MoveSong_Transaction(store, start, end);
+        tps.addTransaction(transaction);
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF DELETING A LIST
@@ -388,7 +400,7 @@ export const useGlobalStore = () => {
     }
 
     store.removeMarkedSong = function () {
-        store.removeSong(store.songIndexMarked);
+        store.addRemoveSongTransaction(store.songIndexMarked);
         store.closeDeleteSongModal();
     }
 
