@@ -2,6 +2,7 @@ import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 import AddSong_Transaction from '../transactions/AddSong_Transaction';
+import EditSong_Transaction from '../transactions/EditSong_Transaction';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -293,6 +294,11 @@ export const useGlobalStore = () => {
         store.updateList();
     }
 
+    store.addEditSongTransaction = function(index, song) {
+        let transaction = new EditSong_Transaction(store, index, song, store.currentList.songs[index]);
+        tps.addTransaction(transaction);
+    }
+
     store.removeSong = function(index) {
         store.currentList.songs.splice(index, 1);
         store.updateList();
@@ -377,7 +383,7 @@ export const useGlobalStore = () => {
     }
 
     store.editMarkedSong = function (song) {
-        store.editSong(store.songIndexMarked, song);
+        store.addEditSongTransaction(store.songIndexMarked, song);
         store.closeEditSongModal();
     }
 
